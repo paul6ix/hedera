@@ -11,39 +11,31 @@ import {
 import "dotenv/config";
 import * as fs from 'fs'
 let client;
+const operatorId  = AccountId.fromString(process.env.OPERATOR_ID_MAIN)
+const operatorKey = PrivateKey.fromString(process.env.OPERATOR_KEY_MAIN)
+client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
+    operatorId,operatorKey);
 
-
-try {
-    client = Client.forName(process.env.HEDERA_NETWORK).setOperator(
-        AccountId.fromString(process.env.OPERATOR_ID_MAIN),
-        PrivateKey.fromString(process.env.OPERATOR_KEY_MAIN)
-    );
-} catch (error) {
-    throw new Error(
-        "Environment variables HEDERA_NETWORK, OPERATOR_ID, and OPERATOR_KEY are required."
-    );
-
-}
 async function main() {
-    const contractByteCode = fs.readFileSync('lookUpContract_sol_LookupContract.bin')
+    const contractByteCode = fs.readFileSync('testnet/contracts/lookUpContract_sol_LookupContract.bin')
     const  fileCreateTx = new  FileCreateTransaction()
         .setContents(contractByteCode)
-        .setKeys([process.env.OPERATOR_KEY_MAIN])
-        .setMaxTransactionFee(new Hbar(0.25))
+        .setKeys([operatorKey])
+        .setMaxTransactionFee(new Hbar(10000))
         .freezeWith(client)
-    const  fileCreateSign = await fileCreateTx.sign(process.env.OPERATOR_KEY_MAIN)
+    const  fileCreateSign = await fileCreateTx.sign(operatorKey)
     const fileCreateSubmit = await  fileCreateSign.execute(client)
     const fileCreateRX = await fileCreateSubmit.getReceipt(client)
-    const byteCodeID = fileCreateRX.fileID
+    const byteCodeID = fileCreateRX.fileId
     console.log(`The bytecode file ID is: ${byteCodeID}`)
 
     const contractInitiateTX = new ContractCreateTransaction()
         .setBytecodeFileId(byteCodeID)
-        .setGas(1000)
-        .setConstructorParameters(new ContractFunctionParameters().addString('Paul Okpor').addUint256(666666))
+        .setGas(100000)
+        .setConstructorParameters(new ContractFunctionParameters().addString('Paul').addUint256(111))
     const contractInitiateSubmit = await  contractInitiateTX.execute(client)
     const contractInitiateRX = await contractInitiateSubmit.getReceipt(client)
-    const contractID = contractInitiateRX.contractID
+    const contractID = contractInitiateRX.contractId
     const contractAddress =  contractID.toSolidityAddress()
     console.log(`- The contract ID is: ${contractID}`)
     console.log(` The smart contract ID in solidity is: ${contractAddress} `)
@@ -51,9 +43,9 @@ async function main() {
 
     const contractQueryTX = new ContractCallQuery()
         .setContractId(contractID)
-        .setGas(1000)
-        .setFunction("getMobileNumber", new ContractFunctionParameters().addString("Paul Okpor"))
-        .setMaxQueryPayment(new Hbar(0.0000001));
+        .setGas(100000)
+        .setFunction("getMobileNumber", new ContractFunctionParameters().addString("Paul"))
+        .setMaxQueryPayment(new Hbar(1));
 
     const contractQuerySubmit = await contractQueryTX.execute(client);
     const contractQueryResult = await  contractQuerySubmit.getUint256(0);
