@@ -9,7 +9,8 @@
   "scripts": {
     "testnet:ecdsa": "env-cmd -f .env nodemon testnet/escdsaAccountCreation.js",
     "testnet:contract": "env-cmd -f .env node  testnet/contracts/deployContract.js",
-    "mainnet:ecdsa": "env-cmd -f .env nodemon mainnet/escdsaAccountCreation.js"
+    "mainnet:ecdsa": "env-cmd -f .env nodemon mainnet/escdsaAccountCreation.js",
+    "mainnet:contract": "env-cmd -f .env node  mainnet/contracts/deployContract.js"
   },
   "repository": {
     "type": "git",
