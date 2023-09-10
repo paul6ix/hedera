@@ -1,0 +1,32 @@
+{
+  "name": "hedera",
+  "version": "1.0.0",
+  "description": "hedera test documents ",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paul6ix/hedera.git"
+  },
+  "keywords": [
+    "hedera"
+  ],
+  "author": "paul6ix",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paul6ix/hedera/issues"
+  },
+  "homepage": "https://github.com/paul6ix/hedera#readme",
+  "dependencies": {
+    "@hashgraph/sdk": "^2.33.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
